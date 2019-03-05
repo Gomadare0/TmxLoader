@@ -18,3 +18,7 @@ TmxLoader::ParseTMX() returns TmxLoader::Map, which contains all data.
 This library consists of some grateful projects below.
 
 Tinyxml2 by leethomason (https://github.com/leethomason/tinyxml2)
+
+### Todo
+ - Make include file dependencies tidy.
+ - Inspect behavior.
