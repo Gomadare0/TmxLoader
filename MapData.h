@@ -19,10 +19,10 @@ namespace TmxLoader
 	struct Map
 	{
 		// TMX Format Version is stored like in this way.
-		StringType version;
+		StringType version = "1.0";
 
 		// Tiled Version is stored.
-		StringType tiledversion;
+		StringType tiledversion = "1.0.1";
 
 		// Orientation (since 0.11)
 		Orientation orientation = Orientation::orthogonal;
@@ -31,33 +31,33 @@ namespace TmxLoader
 		// The order in which tiles on tile layers are rendered.
 		RenderOrder renderorder = RenderOrder::rightdown;
 
-		SizeType width, height;
-		SizeType tilewidth, tileheight;
+		SizeType width = 0, height = 0;
+		SizeType tilewidth = 0, tileheight = 0;
 
 		// Only for hexagonal maps.
 		// Determines the width or height (depending on the staggered axis) of the tileÅfs edge, in pixels.
-		SizeType hexsidelength;
+		SizeType hexsidelength = 0;
 
 		// For staggered and hexagonal maps, determines which axis (ÅgxÅh or ÅgyÅh) is staggered. (since 0.11)
 		// 0 is x, and 1 is y.
-		int staggeraxis;
+		int staggeraxis = 0;
 
 		// For staggered and hexagonal maps, 
 		// determines whether the ÅgevenÅh or ÅgoddÅh indexes along the staggered axis are shifted. (since 0.11)
 		// 0 is even, and 1 is odd;
-		int staggerindex;
+		int staggerindex = 0;
 
 		// The background color of the map. (optional, may include alpha value since 0.15 in the form #AARRGGBB)
 		// Stored in hex, but '#' is excluded in this library.
-		StringType backgroundcolor;
+		StringType backgroundcolor = "FFFFFFFF";
 
 		// Stores the next available ID for new layers. 
 		// This number is stored to prevent reuse of the same ID after layers have been removed. (since 1.2)
-		IdType nextlayerid;
+		IdType nextlayerid = 0;
 
 		// Stores the next available ID for new objects.
 		// This number is stored to prevent reuse of the same ID after objects have been removed. (since 0.11)
-		IdType nextobjectid;
+		IdType nextobjectid = 0;
 
 		VectorType<Property> properties;
 		VectorType<Tileset> tilesets;

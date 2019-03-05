@@ -13,8 +13,8 @@ namespace TmxLoader
 
 	struct Chunk
 	{
-		PositionType x, y;
-		SizeType width, height;
+		PositionType x = 0, y = 0;
+		SizeType width = 0, height = 0;
 
 		StringType storeddata;
 
@@ -37,15 +37,15 @@ namespace TmxLoader
 		// Unique ID of the layer. Each layer that added to a map gets a unique id.
 		// Even if a layer is deleted, no layer ever gets the same ID. Can not be changed in Tiled.
 		// (since Tiled 1.2)
-		IdType id;
+		IdType id = 0;
 
 		StringType name;
 
-		PositionType x, y;
-		SizeType width, height;
-		FloatingPoint opacity;
-		bool visible;
-		PositionType offsetx, offsety;
+		PositionType x = 0, y = 0;
+		SizeType width = 0, height = 0;
+		FloatingPoint opacity = 1.0f;
+		bool visible = true;
+		PositionType offsetx = 0, offsety = 0;
 
 		VectorType<Property> properties;
 

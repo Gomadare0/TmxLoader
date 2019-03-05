@@ -12,7 +12,7 @@ namespace TmxLoader
 		// Orientation of the grid for the tiles in this tileset (orthogonal or isometric)
 		Orientation orientation = Orientation::orthogonal;
 
-		int width, height;
+		SizeType width = 0, height = 0;
 	};
 
 	struct Image
@@ -20,14 +20,14 @@ namespace TmxLoader
 		StringType format;
 
 		// Deprecated. Used in old Tiled.
-		IdType id;
+		IdType id = 0;
 
 		StringType source;
 
 		// Color used as transparent mask.
 		StringType trans;
 
-		int width, height; // Optional
+		int width = 0, height = 0; // Optional
 
 		std::unique_ptr<Data> data;
 	};
@@ -37,7 +37,7 @@ namespace TmxLoader
 		StringType name;
 
 		// The local tile-id of the tile that represents the terrain visually.
-		IdType tile;
+		IdType tile = 0;
 
 		VectorType<Property> properties;
 	};
@@ -45,10 +45,10 @@ namespace TmxLoader
 	struct Frame
 	{
 		// The local ID of a tile within the parent <tileset>.
-		IdType tileid;
+		IdType tileid = 0;
 
 		// How long (in milliseconds) this frame should be displayed before advancing to the next frame.
-		int duration;
+		int duration = 0;
 	};
 
 
@@ -57,7 +57,7 @@ namespace TmxLoader
 		StringType name;
 
 		// The tile ID of the tile representing this Wang set.
-		IdType tile;
+		IdType tile = 0;
 
 		VectorType<Wangcornercolor> wangcornercolor;
 		VectorType<Wangedgecolor> wangedgecolor;
@@ -73,10 +73,10 @@ namespace TmxLoader
 		StringType color;
 
 		// The tile ID of the tile representing this color.
-		IdType tile;
+		IdType tile = 0;
 
 		// The relative probability that this color is chosen over others in case of multiple options.
-		float probability;
+		FloatingPoint probability = 1.0f;
 	};
 
 	struct Wangcornercolor : public WangColorBase {};
@@ -84,18 +84,18 @@ namespace TmxLoader
 
 	struct Wangtile
 	{
-		IdType tileid;
+		IdType tileid = 0;
 
 		// The Wang ID, which is a 32-bit unsigned integer stored in the format 0xCECECECE
 		// (where each C is a corner color and each E is an edge color,
 		// from right to left clockwise, starting with the top edge)
-		unsigned int wangid;
+		unsigned int wangid = 0x00000000;
 	};
 
 	struct Tile
 	{
 		// The local tile ID within its tileset.
-		IdType id;
+		IdType id = 0;
 
 		// The type of the tile. Refers to an object type and is used by tile objects. (optional) (since 1.0)
 		StringType type;
@@ -108,7 +108,7 @@ namespace TmxLoader
 
 		// A percentage indicating the probability
 		// that this tile is chosen when it competes with others while editing with the terrain tool. (optional)
-		FloatingPoint probability;
+		FloatingPoint probability = 1.0f;
 
 		std::unique_ptr<Image> image;
 		std::unique_ptr<Objectgroup> objectgroup;
@@ -121,7 +121,7 @@ namespace TmxLoader
 	struct Tileset
 	{
 		// The first global tile ID of this tileset (this global ID maps to the first tile in this tileset).
-		IdType firstgid;
+		IdType firstgid = 0;
 
 		// If this tileset is stored in an external TSX (Tile Set XML) file,
 		// this attribute refers to that file.
@@ -131,25 +131,25 @@ namespace TmxLoader
 		StringType name;
 
 		// The (maximum) width of the tiles in this tileset.
-		SizeType tilewidth;
+		SizeType tilewidth = 0;
 
 		// The (maximum) height of the tiles in this tileset.
-		SizeType tileheight;
+		SizeType tileheight = 0;
 
 		// The spacing in pixels between the tiles in this tileset (applies to the tileset image).
-		SizeType spacing;
+		SizeType spacing = 0;
 
 		// The margin around the tiles in this tileset (applies to the tileset image).
-		SizeType margin;
+		SizeType margin = 0;
 
 		// The number of tiles in this tileset. (since 0.13)
-		int tilecount;
+		int tilecount = 0;
 
 		// The number of tile columns in the tileset.
 		// For image collection tilesets it is editable and is used when displaying the tileset.(since 0.15)
-		int columns;
+		int columns = 0;
 
-		Point<> tileoffset;
+		Point<> tileoffset = {0, 0};
 		std::unique_ptr <Grid> grid;
 		std::unique_ptr <Image> image;
 

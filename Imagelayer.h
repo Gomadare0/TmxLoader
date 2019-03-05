@@ -7,12 +7,12 @@ namespace TmxLoader
 {
 	struct Imagelayer
 	{
-		IdType id;
+		IdType id = 0;
 		StringType name;
-		PositionType offsetx, offsety;
-		PositionType x, y; // (deprecated since 0.15)
-		FloatingPoint opacity;
-		bool visible;
+		PositionType offsetx = 0, offsety = 0;
+		PositionType x = 0, y = 0; // (deprecated since 0.15)
+		FloatingPoint opacity = 1.0f;
+		bool visible = true;
 
 		VectorType<Property> properties;
 		std::unique_ptr<Image> image;

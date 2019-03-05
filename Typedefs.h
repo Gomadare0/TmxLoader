@@ -14,7 +14,6 @@ namespace TmxLoader
 	using PreciseSizeType = FloatingPoint;
 	using AngleType = FloatingPoint;
 
-	// Notice : StringType needs to be defined operator==
 	using StringType = std::string;
 
 	template<class T>

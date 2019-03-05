@@ -6,4 +6,6 @@
 namespace TmxLoader
 {
 	Map ParseTMX(const StringType& filepath);
+
+	Tileset ParseTSX(const StringType& filepath);
 }

@@ -13,11 +13,11 @@ namespace TmxLoader
 {
 	struct Group
 	{
-		IdType id;
+		IdType id = 0;
 		StringType name;
-		PositionType offsetx, offsety;
-		FloatingPoint opacity;
-		bool visible;
+		PositionType offsetx = 0, offsety = 0;
+		FloatingPoint opacity = 1.0f;
+		bool visible = true;
 
 		VectorType<Property> properties;
 		VectorType<Layer> layers;

@@ -7,6 +7,8 @@
 #include "Property.h"
 #include "Tileset.h"
 
+#include "Utilities.h"
+
 using namespace TmxLoader;
 using namespace TmxLoader::Detail;
 
@@ -17,32 +19,32 @@ Property TmxLoader::Detail::ParseProperty(tinyxml2::XMLElement* node)
 		return Property();
 	}
 	Property result;
-	result.name = node->Attribute("name", "");
-	result.value = node->Attribute("value", "");
+	result.name = AttDefault(node->Attribute("name"), "");
+	result.value = AttDefault(node->Attribute("value"), "");
 
-	auto type = node->Attribute("type", "string");
+	auto type = AttDefault(node->Attribute("type"), "");
 
-	if (::strcmp(type, "string") == 0)
+	if (compareString(type, "string") )
 	{
 		result.type = PropertyType::string_;
 	}
-	else if (::strcmp(type, "int") == 0)
+	else if (compareString(type, "int") )
 	{
 		result.type = PropertyType::int_;
 	}
-	else if (::strcmp(type, "float") == 0)
+	else if (compareString(type, "float") )
 	{
 		result.type = PropertyType::float_;
 	}
-	else if (::strcmp(type, "bool") == 0)
+	else if (compareString(type, "bool") )
 	{
 		result.type = PropertyType::bool_;
 	}
-	else if (::strcmp(type, "color") == 0)
+	else if (compareString(type, "color") )
 	{
 		result.type = PropertyType::color_;
 	}
-	else if (::strcmp(type, "file") == 0)
+	else if (compareString(type, "file") )
 	{
 		result.type = PropertyType::file_;
 	}
@@ -53,7 +55,7 @@ Property TmxLoader::Detail::ParseProperty(tinyxml2::XMLElement* node)
 VectorType<Property> TmxLoader::Detail::ParseProperties(tinyxml2::XMLElement* node)
 {
 	VectorType<Property> result;
-	while (node != nullptr)
+	if (node != nullptr)
 	{
 		auto* propertyNode = node->FirstChildElement();
 		while (propertyNode != nullptr)
@@ -67,14 +69,14 @@ VectorType<Property> TmxLoader::Detail::ParseProperties(tinyxml2::XMLElement* no
 
 Tileset TmxLoader::Detail::ParseTileset(tinyxml2::XMLElement* node)
 {
-	if (node = nullptr)
+	if (node == nullptr)
 	{
 		return Tileset();
 	}
 	Tileset result;
 	result.firstgid = node->IntAttribute("firstgid", 0);
-	result.source = node->Attribute("source", "");
-	result.name = node->Attribute("name", "");
+	result.source = AttDefault(node->Attribute("source"), "");
+	result.name = AttDefault(node->Attribute("name"), "");
 	result.tilewidth = node->IntAttribute("tilewidth", 0);
 	result.tileheight = node->IntAttribute("tileheight", 0);
 	result.spacing = node->IntAttribute("spacing", 0);
@@ -93,37 +95,37 @@ Tileset TmxLoader::Detail::ParseTileset(tinyxml2::XMLElement* node)
 	auto* child = node->FirstChildElement();
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "tileoffset"))
+		if (compareString(child->Name(), "tileoffset"))
 		{
 			Point<> offset;
 			offset.x = child->IntAttribute("x", 0);
 			offset.y = child->IntAttribute("y", 0);
 			result.tileoffset = std::move(offset);
 		}
-		else if (::strcmp(child->Name(), "grid"))
+		else if (compareString(child->Name(), "grid"))
 		{
 			Grid grid;
 			grid.width = child->IntAttribute("width", 0);
 			grid.height = child->IntAttribute("height", 0);
 
-			auto orientation = node->Attribute("orientation", "orthogonal");
+			auto orientation = AttDefault(node->Attribute("orientation"), "");
 
-			if (::strcmp(orientation, "orthogonal") == 0)
+			if (compareString(orientation, "orthogonal") )
 			{
 				grid.orientation = Orientation::orthogonal;
 			}
-			else if (::strcmp(orientation, "isometric") == 0)
+			else if (compareString(orientation, "isometric") )
 			{
 				grid.orientation = Orientation::isometric;
 			}
 			
 			result.grid = std::make_unique<Grid>(grid);
 		}
-		else if (::strcmp(child->Name(), "image"))
+		else if (compareString(child->Name(), "image"))
 		{
 			result.image = std::make_unique<Image>(ParseImage(child));
 		}
-		else if (::strcmp(child->Name(), "terraintypes"))
+		else if (compareString(child->Name(), "terraintypes"))
 		{
 			// Parse Childnodes
 			auto* grandson = child->FirstChildElement();
@@ -133,11 +135,11 @@ Tileset TmxLoader::Detail::ParseTileset(tinyxml2::XMLElement* node)
 				grandson = grandson->NextSiblingElement();
 			}
 		}
-		else if (::strcmp(child->Name(), "tile"))
+		else if (compareString(child->Name(), "tile"))
 		{
 			result.tiles.push_back(ParseTile(child));
 		}
-		else if (::strcmp(child->Name(), "wangsets"))
+		else if (compareString(child->Name(), "wangsets"))
 		{
 			result.wangsets.push_back(ParseWangset(child));
 		}
@@ -147,17 +149,17 @@ Tileset TmxLoader::Detail::ParseTileset(tinyxml2::XMLElement* node)
 	return result;
 }
 
-Image TmxLoader::Detail::ParseImage(tinyxml2::XMLElement* node)
+TmxLoader::Image TmxLoader::Detail::ParseImage(tinyxml2::XMLElement* node)
 {
 	if (node == nullptr)
 	{
 		return Image();
 	}
 	Image result;
-	result.format = node->Attribute("format", "");
+	result.format = AttDefault(node->Attribute("format"), "");
 	result.id = node->IntAttribute("id", 0);
-	result.source = node->Attribute("source", "");
-	result.trans = node->Attribute("trans", "");
+	result.source = AttDefault(node->Attribute("source"), "");
+	result.trans = AttDefault(node->Attribute("trans"), "");
 	result.width = node->IntAttribute("width", 0);
 	result.height = node->IntAttribute("height", 0);
 
@@ -178,7 +180,7 @@ Terrain TmxLoader::Detail::ParseTerrain(tinyxml2::XMLElement* node)
 		return Terrain();
 	}
 	Terrain result;
-	result.name = node->Attribute("name", "");
+	result.name = AttDefault(node->Attribute("name"), "");
 	result.tile = node->IntAttribute("tile", 0);
 	
 	auto properties = node->NextSiblingElement("properties");
@@ -195,10 +197,10 @@ Tile TmxLoader::Detail::ParseTile(tinyxml2::XMLElement* node)
 	}	
 	Tile result;
 	result.id = node->IntAttribute("id", 0);
-	result.type = node->Attribute("type", "");
+	result.type = AttDefault(node->Attribute("type"), "");
 	result.probability = node->FloatAttribute("probability", 0.0f);
 	
-	std::string terraintypes = node->Attribute("terrain", "");
+	std::string terraintypes = AttDefault(node->Attribute("terrain"), "");
 	if (terraintypes.size() != 0)
 	{
 		int cache = 0;
@@ -219,19 +221,19 @@ Tile TmxLoader::Detail::ParseTile(tinyxml2::XMLElement* node)
 	auto* child = node->FirstChildElement();
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "propetries") == 0)
+		if (compareString(child->Name(), "propetries") )
 		{
 			result.properties = ParseProperties(child);
 		}
-		else if (::strcmp(child->Name(), "image") == 0)
+		else if (compareString(child->Name(), "image") )
 		{
 			result.image = std::make_unique<Image>(ParseImage(child));
 		}
-		else if (::strcmp(child->Name(), "objectgroup") == 0)
+		else if (compareString(child->Name(), "objectgroup") )
 		{
 			result.objectgroup = std::make_unique<Objectgroup>(ParseObjectgroup(child));
 		}
-		else if (::strcmp(child->Name(), "animation") == 0)
+		else if (compareString(child->Name(), "animation") )
 		{
 			auto* grandson = child->NextSiblingElement();
 			while (grandson != nullptr)
@@ -264,23 +266,23 @@ Wangset TmxLoader::Detail::ParseWangset(tinyxml2::XMLElement* node)
 		return Wangset();
 	}
 	Wangset result;
-	result.name = node->Attribute("name", "");
+	result.name = AttDefault(node->Attribute("name"), "");
 	result.tile = node->IntAttribute("tile", 0);
 
 	auto* child = node->FirstChildElement();
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "wangcornercolor") == 0)
+		if (compareString(child->Name(), "wangcornercolor") )
 		{
 			auto color = ParseWangColorBase(child);
 			result.wangcornercolor.push_back(*static_cast<Wangcornercolor*>(&color));
 		}
-		else if (::strcmp(child->Name(), "wangedgecolor") == 0)
+		else if (compareString(child->Name(), "wangedgecolor") )
 		{
 			auto color = ParseWangColorBase(child);
 			result.wangedgecolor.push_back(*static_cast<Wangedgecolor*>(&color));
 		}
-		else if (::strcmp(child->Name(), "wangtile") == 0)
+		else if (compareString(child->Name(), "wangtile") )
 		{
 			result.wangtile.push_back(ParseWangeTile(child));
 		}
@@ -298,8 +300,8 @@ WangColorBase TmxLoader::Detail::ParseWangColorBase(tinyxml2::XMLElement* node)
 		return WangColorBase();
 	}
 	WangColorBase result;
-	result.name = node->Attribute("name", "");
-	result.color = node->Attribute("color", "");
+	result.name = AttDefault(node->Attribute("name"), "");
+	result.color = AttDefault(node->Attribute("color"), "");
 	result.tile = node->IntAttribute("tile", 0);
 	result.probability = node->FloatAttribute("probability", 0.0f);
 
@@ -327,7 +329,7 @@ Layer TmxLoader::Detail::ParseLayer(tinyxml2::XMLElement* node)
 	}
 	Layer result;
 	result.id = node->IntAttribute("id", 0);
-	result.name = node->Attribute("name", "");
+	result.name = AttDefault(node->Attribute("name"), "");
 	result.x = node->IntAttribute("x", 0);
 	result.y = node->IntAttribute("y", 0);
 	result.width = node->IntAttribute("width", 0);
@@ -341,11 +343,11 @@ Layer TmxLoader::Detail::ParseLayer(tinyxml2::XMLElement* node)
 	auto* child = node->FirstChildElement();
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "properties") == 0)
+		if (compareString(child->Name(), "properties") )
 		{
 			result.properties = ParseProperties(child);
 		}
-		else if (::strcmp(child->Name(), "data") == 0)
+		else if (compareString(child->Name(), "data") )
 		{
 			result.data = std::make_unique<Data>(ParseData(child));
 		}
@@ -374,21 +376,21 @@ Data TmxLoader::Detail::ParseData(tinyxml2::XMLElement* node)
 		return Data();
 	}
 	Data result;
-	result.encoding = node->Attribute("encoding", "");
-	result.compression = node->Attribute("compression", "");
+	result.encoding = AttDefault(node->Attribute("encoding"), "");
+	result.compression = AttDefault(node->Attribute("compression"), "");
 	result.storeddata = node->GetText();
 	
 	auto* child = node->FirstChildElement();
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "tile"))
+		if (compareString(child->Name(), "tile"))
 		{
 			// Parse Tile
 			Tile_Layer tile;
 			tile.gid = child->IntAttribute("gid", 0);
 			result.tile.push_back(std::move(tile));
 		}
-		else if (::strcmp(child->Name(), "chunk"))
+		else if (compareString(child->Name(), "chunk"))
 		{
 			// Parse Chunk
 			result.chunk.push_back(ParseChunk(child));
@@ -416,7 +418,7 @@ Chunk TmxLoader::Detail::ParseChunk(tinyxml2::XMLElement* node)
 	auto* child = node->FirstChildElement();
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "tile"))
+		if (compareString(child->Name(), "tile"))
 		{
 			Tile_Layer tile;
 			tile.gid = child->IntAttribute("gid", 0);
@@ -436,8 +438,8 @@ Objectgroup TmxLoader::Detail::ParseObjectgroup(tinyxml2::XMLElement* node)
 	}
 	Objectgroup result;
 	result.id = node->IntAttribute("id", 0);
-	result.name = node->Attribute("name", "");
-	result.color = node->Attribute("color","");
+	result.name = AttDefault(node->Attribute("name"), "");
+	result.color = AttDefault(node->Attribute("color"), "");
 	result.x = node->IntAttribute("x", 0);
 	result.y = node->IntAttribute("y", 0);
 	result.width = node->IntAttribute("width", 0);
@@ -447,13 +449,13 @@ Objectgroup TmxLoader::Detail::ParseObjectgroup(tinyxml2::XMLElement* node)
 	result.offsetx = node->IntAttribute("offsetx", 0);
 	result.offsety = node->IntAttribute("offsety", 0);
 
-	auto draworder = node->Attribute("draworder", "topdown");
+	auto draworder = AttDefault(node->Attribute("draworder"), "");
 
-	if (::strcmp(draworder, "topdown") == 0)
+	if (compareString(draworder, "topdown") )
 	{
 		result.draworder = DrawOrder::topdown;
 	}
-	else if (::strcmp(draworder, "index") == 0)
+	else if (compareString(draworder, "index") )
 	{
 		result.draworder = DrawOrder::index;
 	}
@@ -463,17 +465,13 @@ Objectgroup TmxLoader::Detail::ParseObjectgroup(tinyxml2::XMLElement* node)
 
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "properties") == 0)
+		if (compareString(child->Name(), "properties") )
 		{
 			result.properties = ParseProperties(child);
 		}
-		else if (::strcmp(child->Name(), "object") == 0)
+		else if (compareString(child->Name(), "object") )
 		{
-			auto* objectNode = child->FirstChildElement();
-			while (objectNode != nullptr)
-			{
-				result.objects.push_back(ParseObject(objectNode));
-			}
+			result.objects.push_back(ParseObject(child));
 		}
 
 		child = child->NextSiblingElement();
@@ -490,8 +488,8 @@ Object TmxLoader::Detail::ParseObject(tinyxml2::XMLElement* node)
 	}
 	Object result;
 	result.id = node->IntAttribute("id", 0);
-	result.name = node->Attribute("name", "");
-	result.type = node->Attribute("type", "");
+	result.name = AttDefault(node->Attribute("name"), "");
+	result.type = AttDefault(node->Attribute("type"), "");
 	result.x = node->IntAttribute("x", 0);
 	result.y = node->IntAttribute("y", 0);
 	result.width = node->IntAttribute("width", 0);
@@ -499,7 +497,7 @@ Object TmxLoader::Detail::ParseObject(tinyxml2::XMLElement* node)
 	result.rotation = node->FloatAttribute("rotation", 0.0f);
 	result.gid = node->IntAttribute("gid", 0);
 	result.visible = node->BoolAttribute("visible", true);
-	result.templateFile = node->Attribute("template", "");
+	result.templateFile = AttDefault(node->Attribute("template"), "");
 
 	// Pointlist Parsing
 	auto m_parsePoint = [](std::string str) -> VectorType<Point<>>
@@ -518,7 +516,7 @@ Object TmxLoader::Detail::ParseObject(tinyxml2::XMLElement* node)
 			{
 				pointcache.x = cache;
 				cache = 0;
-				bool isX = false;
+				isX = false;
 			}
 			else if (i == ' ')
 			{
@@ -535,29 +533,29 @@ Object TmxLoader::Detail::ParseObject(tinyxml2::XMLElement* node)
 
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "properties") == 0)
+		if (compareString(child->Name(), "properties") )
 		{
 			result.properties = ParseProperties(child);
 		}
-		else if (::strcmp(child->Name(), "ellipse") == 0)
+		else if (compareString(child->Name(), "ellipse") )
 		{
 			result.objectTypeTag = StoredObjectType::ellipse;
 		}
-		else if (::strcmp(child->Name(), "point") == 0)
+		else if (compareString(child->Name(), "point") )
 		{
 			result.objectTypeTag = StoredObjectType::point;
 		}
-		else if (::strcmp(child->Name(), "polygon") == 0)
+		else if (compareString(child->Name(), "polygon") )
 		{
 			result.objectTypeTag = StoredObjectType::polygon;
-			result.pointlists = m_parsePoint(child->Attribute("points", ""));
+			result.pointlists = m_parsePoint(child->Attribute("points"));
 		}
-		else if (::strcmp(child->Name(), "polyline") == 0)
+		else if (compareString(child->Name(), "polyline") )
 		{
 			result.objectTypeTag = StoredObjectType::polyline;
-			result.pointlists = m_parsePoint(child->Attribute("points", ""));
+			result.pointlists = m_parsePoint(child->Attribute("points"));
 		}
-		else if (::strcmp(child->Name(), "text") == 0)
+		else if (compareString(child->Name(), "text") )
 		{
 			result.objectTypeTag = StoredObjectType::text;
 			result.text = std::make_unique<Text>(ParseText(child));
@@ -576,10 +574,10 @@ Text TmxLoader::Detail::ParseText(tinyxml2::XMLElement* node)
 		return Text();
 	}
 	Text result;
-	result.fontfamily = node->Attribute("fontfamily", "");
+	result.fontfamily = AttDefault(node->Attribute("fontfamily"), "");
 	result.pixelsize = node->IntAttribute("pixelsize", 16);
 	result.wrap = node->IntAttribute("wrap", 0);
-	result.color = node->Attribute("color", "#000000");
+	result.color = AttDefault(node->Attribute("color"), "");
 	result.bold = node->IntAttribute("bold", 0);
 	result.italic = node->IntAttribute("italic", 0);
 	result.underline = node->IntAttribute("underline", 0);
@@ -588,38 +586,38 @@ Text TmxLoader::Detail::ParseText(tinyxml2::XMLElement* node)
 
 	// HAlign Enum
 	//
-	auto halign = node->Attribute("haligh", "left");
+	auto halign = AttDefault(node->Attribute("haligh"), "");
 
-	if (::strcmp(halign, "left") == 0)
+	if (compareString(halign, "left") )
 	{
 		result.halign = HAlign::left;
 	}
-	else if (::strcmp(halign, "center") == 0)
+	else if (compareString(halign, "center") )
 	{
 		result.halign = HAlign::center;
 	}
-	else if (::strcmp(halign, "right") == 0)
+	else if (compareString(halign, "right") )
 	{
 		result.halign = HAlign::right;
 	}
-	else if (::strcmp(halign, "justify") == 0)
+	else if (compareString(halign, "justify") )
 	{
 		result.halign = HAlign::justify;
 	}
 
 	// VAlign Enum
 	//
-	auto valign = node->Attribute("valign", "top");
+	auto valign = AttDefault(node->Attribute("valign"), "");
 
-	if (::strcmp(valign, "top") == 0)
+	if (compareString(valign, "top") )
 	{
 		result.valign = VAlign::top;
 	}
-	else if (::strcmp(valign, "center") == 0)
+	else if (compareString(valign, "center") )
 	{
 		result.valign = VAlign::center;
 	}
-	else if (::strcmp(valign, "bottom") == 0)
+	else if (compareString(valign, "bottom") )
 	{
 		result.valign = VAlign::bottom;
 	}
@@ -635,7 +633,7 @@ Imagelayer TmxLoader::Detail::ParseImagelayer(tinyxml2::XMLElement* node)
 	}
 	Imagelayer result;
 	result.id = node->IntAttribute("id", 0);
-	result.name = node->Attribute("name", "");
+	result.name = AttDefault(node->Attribute("name"), "");
 	result.offsetx = node->IntAttribute("offsetx", 0);
 	result.offsety = node->IntAttribute("offsety", 0);
 	result.x = node->IntAttribute("x", 0);
@@ -648,11 +646,11 @@ Imagelayer TmxLoader::Detail::ParseImagelayer(tinyxml2::XMLElement* node)
 
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "properties") == 0)
+		if (compareString(child->Name(), "properties") )
 		{
 			result.properties = ParseProperties(child);
 		}
-		else if (::strcmp(child->Name(), "image") == 0)
+		else if (compareString(child->Name(), "image") )
 		{
 			result.image = std::make_unique<Image>(ParseImage(child));
 		}
@@ -672,7 +670,7 @@ Group TmxLoader::Detail::ParseGroup(tinyxml2::XMLElement* node)
 	Group result;
 
 	result.id = node->IntAttribute("id", 0);
-	result.name = node->Attribute("name", "");
+	result.name = AttDefault(node->Attribute("name"), "");
 	result.opacity = node->FloatAttribute("opacity", 0.0f);
 	result.visible = node->BoolAttribute("visible", true);
 	result.offsetx = node->IntAttribute("offsetx", 0);
@@ -683,23 +681,23 @@ Group TmxLoader::Detail::ParseGroup(tinyxml2::XMLElement* node)
 
 	while (child != nullptr)
 	{
-		if (::strcmp(child->Name(), "properties") == 0)
+		if (compareString(child->Name(), "properties") )
 		{
 			result.properties = ParseProperties(child);
 		}
-		else if (::strcmp(child->Name(), "layer") == 0)
+		else if (compareString(child->Name(), "layer") )
 		{
 			result.layers.push_back(ParseLayer(child));
 		}
-		else if (::strcmp(child->Name(), "objectgroup") == 0)
+		else if (compareString(child->Name(), "objectgroup") )
 		{
 			result.objectgroups.push_back(ParseObjectgroup(child));
 		}
-		else if (::strcmp(child->Name(), "imagelayer") == 0)
+		else if (compareString(child->Name(), "imagelayer") )
 		{
 			result.imagelayers.push_back(ParseImagelayer(child));
 		}
-		else if (::strcmp(child->Name(), "group") == 0)
+		else if (compareString(child->Name(), "group") )
 		{
 			result.groups.push_back(ParseGroup(child));
 		}
