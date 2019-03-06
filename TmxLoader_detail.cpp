@@ -241,6 +241,7 @@ Tile TmxLoader::Detail::ParseTile(tinyxml2::XMLElement* node)
 				result.animation.push_back(ParseFrame(grandson));
 			}			
 		}
+		child = child->NextSiblingElement();
 	}
 
 	return result;
