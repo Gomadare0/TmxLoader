@@ -20,5 +20,8 @@ This library consists of some grateful projects below.
 Tinyxml2 by leethomason (https://github.com/leethomason/tinyxml2)
 
 ### Todo
+ - Support template.
+ - Add zlib, gzlp decompression.
+ - Add Base64 decoder.
  - Make include file dependencies tidy.
  - Inspect behavior.
