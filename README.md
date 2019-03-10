@@ -2,7 +2,7 @@
 Tmx File (Tiled Map Editor's Map file) Loader based on Tinyxml2.
 
 ## Feature
- - Read TMX and TSX. (currently supports version 1.1 - https://doc.mapeditor.org/en/stable/reference/tmx-map-format)
+ - Read TMX and TSX. (currently supporting version 1.1 - https://doc.mapeditor.org/en/stable/reference/tmx-map-format)
  - Hardly depending on STL.
 
 ## Usage
@@ -17,9 +17,7 @@ TmxLoader::ParseTMX() returns TmxLoader::Map, which contains all data.
 ## Thanks
 This library consists of some grateful projects below.
 
-Tinyxml-2 - Copyright (c) 2018 leethomason (https://github.com/leethomason/tinyxml2)
-
-single header base64 encoder/decoder - Copyright (c) 2016 tomykaira (https://gist.github.com/tomykaira/f0fd86b6c73063283afe550bc5d77594)
+ - Tinyxml-2 - Copyright (c) 2018 leethomason (https://github.com/leethomason/tinyxml2)
 
 ### Todo
  - Support template.
