@@ -3,6 +3,8 @@
 #include "tinyxml2/tinyxml2.h"
 #include "TmxLoader_detail.h"
 
+#include <algorithm>
+
 using namespace TmxLoader;
 
 Map TmxLoader::ParseTMX(const StringType& filepath)
@@ -12,7 +14,6 @@ Map TmxLoader::ParseTMX(const StringType& filepath)
 	doc.LoadFile(filepath.c_str());
 	if (doc.Error())
 	{
-		Map dummy;
 		return Map();
 	}
 	
@@ -107,6 +108,13 @@ Map TmxLoader::ParseTMX(const StringType& filepath)
 		child = child->NextSiblingElement();
 	}
 
+	// Sort Tilesets by firstgid
+	std::sort(map.tilesets.begin(), map.tilesets.end()
+		, [](Tileset& left, Tileset& right)
+	{
+		return left.firstgid < right.firstgid;
+	});
+
 	return map;
 }
 
@@ -117,7 +125,6 @@ Tileset TmxLoader::ParseTSX(const StringType& filepath)
 	doc.LoadFile(filepath.c_str());
 	if (doc.Error())
 	{
-		Tileset dummy;
 		return Tileset();
 	}
 
@@ -128,4 +135,92 @@ Tileset TmxLoader::ParseTSX(const StringType& filepath)
 	}
 
 	return Detail::ParseTileset(root);
+}
+
+Object TmxLoader::ExpandTemplate(Object object)
+{
+	if (object.templateFile.size() == 0)
+	{
+		return Object();
+	}
+
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile(object.templateFile.c_str());
+	if (doc.Error())
+	{
+		return Object();
+	}
+
+	tinyxml2::XMLElement* root = doc.FirstChildElement("template");
+	if (root == nullptr)
+	{
+		return Object();
+	}
+
+	auto* child = root->FirstChildElement();
+
+	while (child != nullptr)
+	{
+		if (compareString(child->Name(), "object"))
+		{
+			Object tmp = Detail::ParseObject(child);
+
+			// Each object has unique IDs. Don't substitute id.
+			if (tmp.name.size() != 0)
+			{
+				object.name = tmp.name;
+			}
+			if (tmp.type.size() != 0)
+			{
+				object.type = tmp.type;
+			}
+			//if (tmp.x != 0)
+			//{
+			//	object.x = tmp.x;
+			//}
+			//if (tmp.y != 0)
+			//{
+			//	object.y = tmp.y;
+			//}
+			if (tmp.width != 0)
+			{
+				object.width = tmp.width;
+			}
+			if (tmp.height != 0)
+			{
+				object.height = tmp.height;
+			}
+			if (tmp.rotation != 0.0)
+			{
+				object.rotation = tmp.rotation;
+			}
+			if (tmp.gid != 0)
+			{
+				object.gid = tmp.gid;
+			}
+			if (tmp.objectTypeTag != StoredObjectType::any)
+			{
+				object.objectTypeTag = tmp.objectTypeTag;
+			}
+			if (tmp.properties.size() != 0)
+			{
+				object.properties.assign(tmp.properties.begin(), tmp.properties.end());
+			}
+			if (tmp.pointlists.size() != 0)
+			{
+				object.pointlists.assign(tmp.pointlists.begin(), tmp.pointlists.end());
+			}
+			if (tmp.text != nullptr)
+			{
+				object.text = std::make_unique<Text>(*tmp.text);
+			}
+		}
+		else if (compareString(child->Name(), "tileset"))
+		{
+			object.externalTilesetInfo = std::make_unique<Tileset>(Detail::ParseTileset(child));
+		}
+
+		child = child->NextSiblingElement();
+	}
+	return object;
 }

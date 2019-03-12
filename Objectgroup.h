@@ -30,11 +30,12 @@ namespace TmxLoader
 		PositionType x = 0, y = 0;
 		SizeType width = 0, height = 0;
 		AngleType rotation = 0.0f;
-		
-		// A reference to a tile (optional).
-		IdType gid = 0;
 		bool visible = true;
+
+		// A reference to a tile (optional).
+		IdType gid = 0;		
 		StringType templateFile;
+		std::unique_ptr<Tileset> externalTilesetInfo; // It corresponds to <tileset> tag in an external template file.
 
 		StoredObjectType objectTypeTag = StoredObjectType::any;
 

@@ -30,6 +30,10 @@ namespace TmxLoader
 
 		VectorType<Tile_Layer> tile;
 		VectorType<Chunk> chunk;
+
+		//----------------------------
+
+		void ConvertStoredDataIntoTiles();
 	};
 
 	struct Layer
