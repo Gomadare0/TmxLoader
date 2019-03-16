@@ -25,6 +25,8 @@ namespace TmxLoader
 		VectorType<Imagelayer> imagelayers;
 		VectorType<Group> groups; //group layer itself
 
+		int layerOrder = 0; // The more this is small, the lower this is placed in layer hierarchy.
+
 		// Setters which affect all child layers;
 		void SetOffsetX(const int& value)
 		{

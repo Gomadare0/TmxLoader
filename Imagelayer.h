@@ -14,6 +14,8 @@ namespace TmxLoader
 		FloatingPoint opacity = 1.0f;
 		bool visible = true;
 
+		int layerOrder = 0; // The more this is small, the lower this is placed in layer hierarchy.
+
 		VectorType<Property> properties;
 		std::unique_ptr<Image> image;
 	};

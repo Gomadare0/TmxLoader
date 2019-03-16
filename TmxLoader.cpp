@@ -74,9 +74,13 @@ Map TmxLoader::ParseTMX(const StringType& filepath)
 	map.backgroundcolor = AttDefault(root->Attribute("backgroundcolor"), "FFFFFF");
 	map.nextlayerid = root->IntAttribute("nextlayerid", 0);
 	map.nextobjectid = root->IntAttribute("nextobjectid", 0);
+	map.infinite = root->BoolAttribute("infinite", false);
+
 
 	// Child node parsing	
 	auto* child = root->FirstChildElement();
+
+	int layerOrder = 0;
 
 	while (child != nullptr)
 	{
@@ -90,19 +94,35 @@ Map TmxLoader::ParseTMX(const StringType& filepath)
 		}
 		else if (compareString(child->Name(), "layer"))
 		{
-			map.layers.push_back(Detail::ParseLayer(child));
+			auto layer = Detail::ParseLayer(child);
+			layer.layerOrder = layerOrder;
+			++layerOrder;
+
+			map.layers.push_back(std::move(layer));
 		}
 		else if (compareString(child->Name(), "objectgroup"))
 		{
-			map.objectgroups.push_back(Detail::ParseObjectgroup(child));
+			auto layer = Detail::ParseObjectgroup(child);
+			layer.layerOrder = layerOrder;
+			++layerOrder;
+			
+			map.objectgroups.push_back(std::move(layer));
 		}
 		else if (compareString(child->Name(), "imagelayer"))
 		{
-			map.imagelayers.push_back(Detail::ParseImagelayer(child));
+			auto layer = Detail::ParseImagelayer(child);
+			layer.layerOrder = layerOrder;
+			++layerOrder;
+
+			map.imagelayers.push_back(std::move(layer));
 		}
 		else if (compareString(child->Name(), "group"))
 		{
-			map.groups.push_back(Detail::ParseGroup(child));
+			auto layer = Detail::ParseGroup(child);
+			layer.layerOrder = layerOrder;
+			++layerOrder;
+
+			map.groups.push_back(std::move(layer));
 		}
 
 		child = child->NextSiblingElement();

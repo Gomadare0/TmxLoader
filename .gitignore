@@ -1,0 +1,5 @@
+# visual studio
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user

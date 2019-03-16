@@ -59,6 +59,8 @@ namespace TmxLoader
 		// This number is stored to prevent reuse of the same ID after objects have been removed. (since 0.11)
 		IdType nextobjectid = 0;
 
+		bool infinite = false;
+
 		VectorType<Property> properties;
 		VectorType<Tileset> tilesets;
 		VectorType<Layer> layers;

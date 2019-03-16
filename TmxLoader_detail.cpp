@@ -379,7 +379,9 @@ Data TmxLoader::Detail::ParseData(tinyxml2::XMLElement* node)
 	Data result;
 	result.encoding = AttDefault(node->Attribute("encoding"), "");
 	result.compression = AttDefault(node->Attribute("compression"), "");
-	result.storeddata = node->GetText();
+
+	auto dataText = node->GetText();
+	result.storeddata = dataText != 0 ? dataText : "";
 	
 	auto* child = node->FirstChildElement();
 	while (child != nullptr)

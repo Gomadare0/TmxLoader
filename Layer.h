@@ -51,6 +51,8 @@ namespace TmxLoader
 		bool visible = true;
 		PositionType offsetx = 0, offsety = 0;
 
+		int layerOrder = 0; // The more this is small, the lower this is placed in layer hierarchy.
+
 		VectorType<Property> properties;
 
 		std::unique_ptr<Data> data;

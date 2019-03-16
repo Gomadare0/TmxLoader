@@ -18,13 +18,12 @@ namespace TmxLoader
 			return ret;
 		}
 
+		// [Not Supported] infinite map, template, multi tileset
 		inline s3d::Image GetImageFromTileset(const Tileset& tileset, std::filesystem::path tsxPath = "")
 		{
 			return s3d::Image(GetAbsolutePath(tileset.image->source, tsxPath).u32string());
 		}
 
-		// TODO : Add support for <tile>, base64 and compression
-		//
 		s3d::Image GetWholeMapImage(const Map& map, const Tileset& tileset, s3d::Image& tilesetImage);
 	}
 }
